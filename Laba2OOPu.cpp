@@ -174,7 +174,9 @@ public:
 
     // Метод для рисования всех фигур в группе
     void drawAll() const {
+        std::cout << "Рисуем круг, показывающий пример композиции через объект:" << std::endl;
         circleDirect.draw();
+        std::cout << "Рисуем круг, показывающий пример композиции через указатель:" << std::endl;
         circlePointer->draw();
     }
 
@@ -182,36 +184,6 @@ public:
     ~Group() {
         delete circlePointer; // Удаляем объект, созданный через указатель
         std::cout << "Деструктор Group вызван." << std::endl;
-    }
-};
-
-// Класс Container для демонстрации композиции
-class Container {
-private:
-    Circle circleDirect;   // Композиция через объект
-    Circle* circlePointer; // Композиция через указатель
-
-public:
-    // Конструктор
-    Container(int x1, int y1, int r1, int x2, int y2, int r2)
-        : circleDirect(x1, y1, r1) { // Инициализация объекта напрямую
-        circlePointer = new Circle(x2, y2, r2); // Создание объекта через указатель
-        std::cout << "Конструктор Container вызван." << std::endl;
-    }
-
-    // Метод для рисования фигур
-    void drawAll() const {
-        std::cout << "Рисуем круг, показывающий пример композиции через объект:" << std::endl;
-        circleDirect.draw();
-
-        std::cout << "Рисуем круг, показывающий пример композиции через указатель:" << std::endl;
-        circlePointer->draw();
-    }
-
-    // Деструктор
-    ~Container() {
-        delete circlePointer; // Удаляем объект, созданный через указатель
-        std::cout << "Деструктор Container вызван." << std::endl;
     }
 };
 
@@ -227,8 +199,18 @@ int main() {
     canvas.addShape(new Circle(50, 60, 7)); // Динамический объект
     canvas.addShape(new Square(70, 80, 15)); // Динамический объект
 
-    Shape* shape2 = new Circle(30, 40, 5); // Создание объекта производного класса
+    Shape* shape2 = new Circle(30, 40, 5); // Динамическое создание объекта производного класса
     shape2->draw(); // Вызывается метод draw() из класса Circle
+
+    std::cout << "\n=== Пример срезки ===" << std::endl;
+    Circle c2(100, 200, 25);
+    Shape* s2 = &c2; // Срезка: теряется информация о радиусе
+    s2->draw(); // Вызывается метод draw() базового класса
+
+    std::cout << "\n=== Пример полиморфизма ===" << std::endl;
+    Shape* shapePtr = new Circle(30, 40, 5); // MyBase * obj = new MyDeriv()
+    shapePtr->draw(); // Вызывается метод Circle::draw()
+    delete shapePtr;
 
     std::cout << "\n=== Рисуем все фигуры ===" << std::endl;
     canvas.drawAll();
@@ -244,12 +226,6 @@ int main() {
 
     std::cout << "\n=== Рисуем все фигуры в группе ===" << std::endl;
     group.drawAll();
-
-    // Создаём объект Container
-    Container container(100, 200, 15, 300, 400, 25);
-
-    std::cout << "\n=== Рисуем все фигуры в контейнере ===" << std::endl;
-    container.drawAll();
 
     return 0;
 }
