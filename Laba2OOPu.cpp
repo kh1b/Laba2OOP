@@ -50,15 +50,11 @@ private:
     int radius; // Инициализация по умолчанию
 
 public:
-    // Конструктор по умолчанию
-    Circle() {
-        radius = 0;
-        std::cout << "Конструктор по умолчанию Circle вызван. Радиус: " << radius << std::endl;
-    }
+    // Конструктор по умолчанию (реализация вне класса)
+    Circle();
 
     // Конструктор с параметрами
-    Circle(int xVal, int yVal, int r) : Shape(xVal, yVal){
-        radius = r;
+    Circle(int xVal, int yVal, int r) : Shape(xVal, yVal), radius(r) { // Инициализация полей класса в списке инициализации конструктора
         std::cout << "Конструктор с параметрами Circle вызван. Радиус: " << radius << std::endl;
     }
 
@@ -68,16 +64,25 @@ public:
         std::cout << "Конструктор копирования Circle вызван." << std::endl;
     }
 
-    // Переопределение метода draw
-    void draw() const override {
-        std::cout << "Рисуем круг в точке (" << x << ", " << y << ") с радиусом " << radius << std::endl;
-    }
+    // Переопределение метода draw (реализация метода после определения)
+    void draw() const override;
 
     // Деструктор
     ~Circle() override {
         std::cout << "Деструктор Circle вызван." << std::endl;
     }
 };
+
+// Конструктор по умолчанию (реализация вне класса)
+Circle::Circle() {
+    radius = 0;
+    std::cout << "Конструктор по умолчанию Circle вызван. Радиус: " << radius << std::endl;
+}
+
+// Переопределение метода draw (реализация метода после определения)
+void Circle::draw() const {
+    std::cout << "Рисуем круг в точке (" << x << ", " << y << ") с радиусом " << radius << std::endl;
+}
 
 // Производный класс Square
 class Square : public Shape {
@@ -180,6 +185,36 @@ public:
     }
 };
 
+// Класс Container для демонстрации композиции
+class Container {
+private:
+    Circle circleDirect;   // Композиция через объект
+    Circle* circlePointer; // Композиция через указатель
+
+public:
+    // Конструктор
+    Container(int x1, int y1, int r1, int x2, int y2, int r2)
+        : circleDirect(x1, y1, r1) { // Инициализация объекта напрямую
+        circlePointer = new Circle(x2, y2, r2); // Создание объекта через указатель
+        std::cout << "Конструктор Container вызван." << std::endl;
+    }
+
+    // Метод для рисования фигур
+    void drawAll() const {
+        std::cout << "Рисуем круг, показывающий пример композиции через объект:" << std::endl;
+        circleDirect.draw();
+
+        std::cout << "Рисуем круг, показывающий пример композиции через указатель:" << std::endl;
+        circlePointer->draw();
+    }
+
+    // Деструктор
+    ~Container() {
+        delete circlePointer; // Удаляем объект, созданный через указатель
+        std::cout << "Деструктор Container вызван." << std::endl;
+    }
+};
+
 int main() {
     setlocale(LC_ALL, "RU");
 
@@ -191,6 +226,9 @@ int main() {
     Canvas canvas; // Создаем холст
     canvas.addShape(new Circle(50, 60, 7)); // Динамический объект
     canvas.addShape(new Square(70, 80, 15)); // Динамический объект
+
+    Shape* shape2 = new Circle(30, 40, 5); // Создание объекта производного класса
+    shape2->draw(); // Вызывается метод draw() из класса Circle
 
     std::cout << "\n=== Рисуем все фигуры ===" << std::endl;
     canvas.drawAll();
@@ -207,6 +245,11 @@ int main() {
     std::cout << "\n=== Рисуем все фигуры в группе ===" << std::endl;
     group.drawAll();
 
-    return 0;
+    // Создаём объект Container
+    Container container(100, 200, 15, 300, 400, 25);
 
+    std::cout << "\n=== Рисуем все фигуры в контейнере ===" << std::endl;
+    container.drawAll();
+
+    return 0;
 }
