@@ -22,8 +22,9 @@
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
     <ProjectGuid>{e420d1ee-debe-4ee2-99d6-19a85cc6ca1b}</ProjectGuid>
-    <RootNamespace>Laba2OOPu</RootNamespace>
+    <RootNamespace>Laba2OOP</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>Laba2OOP</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
